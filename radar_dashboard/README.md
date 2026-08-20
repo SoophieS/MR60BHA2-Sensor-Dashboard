@@ -14,7 +14,7 @@ Edge/Chrome serial dialog. Browser security rules require the user to authorize
 the serial port, so the page cannot select COM4 automatically.
 
 **Demo Mode uses simulated data only and never reads the physical sensor.** It
-simulates two tracked people so the multi-target layout can be demonstrated.
+simulates one tracked person with vital-sign, distance, and illuminance data.
 
 Only one program can use the serial port at a time. Close the Seeed GUI, OTA
 tool, and serial monitor before connecting. Vital-sign readings are for
