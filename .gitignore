@@ -1,0 +1,15 @@
+# Project-local Arduino downloads, board packages, caches, and libraries
+.arduino/
+arduino-cli/
+arduino-cli_*.zip
+
+# Seeed distributes these large unsigned binaries separately.
+tools/*
+!tools/README.md
+
+# Local captures and editor/system files
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MR60BHA2 Human Sensing Console</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark"><span></span><span></span><span></span></div><div><p class="eyebrow">60 GHz HUMAN SENSING</p><h1>MR60BHA2 <span>Sensing Console</span></h1></div></div>
+      <div class="controls">
+        <div class="connection-pill" id="connectionPill"><span class="status-dot"></span><span id="connectionText">Waiting for connection</span></div>
+        <button class="button button-ghost" id="demoButton">Demo Mode</button><button class="button button-primary" id="connectButton">Connect Sensor</button>
+      </div>
+    </header>
+    <section class="hero-grid">
+      <article class="panel radar-panel">
+        <div class="panel-heading"><div><p class="eyebrow">SPATIAL TRACKING</p><h2>Live Detection Zone</h2></div><div class="live-tag"><span></span> LIVE</div></div>
+        <div class="radar-wrap">
+          <canvas id="radarCanvas"></canvas>
+          <div class="radar-empty" id="radarEmpty"><div class="scan-icon"></div><strong>Waiting for target data</strong><span>Connect a COM port or start Demo Mode</span></div>
+          <div class="range-label range-1">1 m</div><div class="range-label range-3">3 m</div><div class="range-label range-5">5 m</div>
+        </div>
+        <div class="radar-footer"><span>Horizontal beam approx. ±60°</span><span>Display range 0–5 m</span><span id="lastFrameText">No data frames yet</span></div>
+      </article>
+      <aside class="metrics-column">
+        <article class="panel presence-card" id="presenceCard">
+          <div class="presence-orbit"><div class="person-icon">●</div></div>
+          <div><p class="eyebrow">PRESENCE</p><h2 id="presenceText">No Detection</h2><p id="presenceSubtext">No human target in the detection zone</p></div>
+          <div class="count-badge"><strong id="stableCount">0</strong><span>Stable Count</span></div>
+        </article>
+        <div class="metric-grid">
+          <article class="panel metric-card heart"><div class="metric-icon">♥</div><p>Heart Rate</p><div><strong id="heartValue">--</strong><span>bpm</span></div><small id="heartState">Waiting for a stable reading</small></article>
+          <article class="panel metric-card breath"><div class="metric-icon">≈</div><p>Breathing Rate</p><div><strong id="breathValue">--</strong><span>bpm</span></div><small id="breathState">Remain still for about 1 minute</small></article>
+          <article class="panel metric-card distance"><div class="metric-icon">⌁</div><p>Nearest Distance</p><div><strong id="distanceValue">--</strong><span>cm</span></div><small>Vital-sign core zone: 50–150 cm</small></article>
+          <article class="panel metric-card light"><div class="metric-icon">✦</div><p>Illuminance</p><div><strong id="lightValue">--</strong><span>lux</span></div><small>Onboard BH1750</small></article>
+        </div>
+      </aside>
+    </section>
+    <section class="lower-grid">
+      <article class="panel chart-panel"><div class="panel-heading compact"><div><p class="eyebrow">VITAL TREND</p><h2>Vital-Sign Trends</h2></div><div class="legend"><span class="heart-line">Heart</span><span class="breath-line">Breathing</span></div></div><canvas id="trendCanvas"></canvas></article>
+      <article class="panel target-panel"><div class="panel-heading compact"><div><p class="eyebrow">TARGET DETAIL</p><h2>Target Details</h2></div><span class="raw-count">Raw Targets <strong id="rawCount">0</strong></span></div><div class="target-list" id="targetList"><div class="target-placeholder">No target coordinates received</div></div></article>
+    </section>
+    <footer><span>Source: Seeed MR60BHA2 + XIAO ESP32C6</span><span id="frameRate">0 frames</span><span>Not a medical diagnostic device</span></footer>
+  </main>
+  <div class="toast" id="toast"></div><script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{"kind":"presence","detected":true}
+
+{"kind":"targets","count":1,"items":[
+  {
+    "x_m":-0.082,
+    "y_m":0.788,
+    "doppler_index":0,
+    "cluster_index":0,
+    "speed_cm_s":0.0
+  }
+]}
+
+{"kind":"distance","cm":74.62}
+
+{"kind":"phase",
+ "total":0.03509,
+ "breath":-0.00062,
+ "heart":-0.00883}
+
+{"kind":"breath_rate","bpm":0.0}
+
+{"kind":"heart_rate","bpm":0.0}

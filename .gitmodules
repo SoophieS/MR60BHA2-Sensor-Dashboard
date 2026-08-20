@@ -1,0 +1,3 @@
+[submodule "Seeed-mmWave-library"]
+	path = Seeed-mmWave-library
+	url = https://github.com/Love4yzp/Seeed-mmWave-library.git
