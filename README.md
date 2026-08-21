@@ -186,6 +186,7 @@ setup-windows.ps1       新电脑 Arduino 环境安装
 start-demo.cmd          仅启动网页，不刷固件
 start-dashboard.cmd     刷入 probe 并启动网页
 start-radar-gui.cmd     刷入 passthrough 并启动官方 GUI
+start-radar-ota.cmd     刷入 passthrough 并启动官方 OTA 工具
 restore-robot-probe.cmd 恢复 JSON Lines 固件
 ```
 
