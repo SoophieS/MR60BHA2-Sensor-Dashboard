@@ -15,15 +15,25 @@
 
 ### 环境要求
 
-- Windows 10/11
-- [Git](https://git-scm.com/download/win)
-- [Python 3](https://www.python.org/downloads/windows/)
+- Windows 10/11 或原生 Linux
+- Git
+- Python 3（也可使用仓库中的 Conda `biosensor` 环境）
 - Microsoft Edge 或 Google Chrome
 
 ```powershell
 git clone --recurse-submodules https://github.com/SoophieS/MR60BHA2-Sensor-Dashboard.git
 cd MR60BHA2-Sensor-Dashboard
 .\start-demo.cmd
+```
+
+原生 Linux：
+
+```bash
+git clone --recurse-submodules https://github.com/SoophieS/MR60BHA2-Sensor-Dashboard.git
+cd MR60BHA2-Sensor-Dashboard
+conda env create -f environment.yml
+conda activate biosensor
+bash start-demo.sh
 ```
 
 浏览器将打开 <http://localhost:8765>。点击网页右上角 **Demo Mode**，即可看到一个模拟目标、心率、呼吸率、距离、照度和趋势曲线。
@@ -37,6 +47,8 @@ Demo Mode 不读取真实传感器。如果页面显示 `Waiting for target data
 - Seeed MR60BHA2 mmWave Kit
 - XIAO ESP32C6
 - 支持数据传输的 USB-C 线
+
+### Windows
 
 首次安装（需要网络）：
 
@@ -76,6 +88,48 @@ powershell -ExecutionPolicy Bypass -File .\setup-windows.ps1
 
 网页打开后点击 **Connect Sensor**，然后在浏览器弹窗中选择刚才确认的 XIAO 串口。Web Serial 的安全规则要求用户手动授权，网页不能自动选择 COM 端口。
 
+### 原生 Linux（支持真实数据）
+
+推荐先创建固定名称的 Conda 环境：
+
+```bash
+git clone --recurse-submodules https://github.com/SoophieS/MR60BHA2-Sensor-Dashboard.git
+cd MR60BHA2-Sensor-Dashboard
+conda env create -f environment.yml
+conda activate biosensor
+bash setup-linux.sh
+```
+
+`setup-linux.sh` 会根据 `x86_64`、`ARM64` 或 `ARMv7` 自动下载并校验 Arduino CLI `1.5.1`，然后在项目目录内安装与 Windows 相同的 ESP32 Core 和依赖库，不修改系统 Arduino IDE。
+
+将支持数据传输的 USB-C 线连接到 **XIAO ESP32C6 的 USB 口**，查找设备：
+
+```bash
+./arduino-env.sh board list
+ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null
+```
+
+Linux 下通常是 `/dev/ttyACM0`。首次刷入固件并启动网页：
+
+```bash
+./start-dashboard.sh /dev/ttyACM0
+```
+
+如果提示串口权限不足：
+
+```bash
+sudo usermod -aG dialout "$USER"
+```
+
+执行后必须注销 Linux 用户并重新登录，再重新运行启动命令。用最新版 Chrome 或 Chromium 打开 <http://localhost:8765>，点击 **Connect Sensor**，在浏览器授权窗口选择同一个 XIAO 设备。网页收到的是雷达实时 JSON 数据，不是 Demo 数据。
+
+如果 XIAO 已经刷入 `robot_probe`，日常使用无需重复刷写：
+
+```bash
+conda activate biosensor
+./start-demo.sh
+```
+
 ## 3. 日常使用
 
 如果 XIAO 已经刷入 `robot_probe`，无需每次重新上传固件，可直接运行：
@@ -85,6 +139,8 @@ powershell -ExecutionPolicy Bypass -File .\setup-windows.ps1
 ```
 
 然后点击 **Connect Sensor** 并选择端口。
+
+Linux 使用 `./start-demo.sh`，并在 Chrome/Chromium 中选择 `/dev/ttyACM*` 或 `/dev/ttyUSB*` 对应的 XIAO。
 
 串口一次只能被一个程序占用。连接网页前请关闭 Arduino Serial Monitor、Seeed 官方 GUI、Radar OTA 软件和其他串口终端。
 
@@ -160,6 +216,8 @@ powershell -ExecutionPolicy Bypass -File .\video_demo\render_demo.ps1
 
 使用最新版 Microsoft Edge 或 Google Chrome。Firefox/Safari 当前不支持本项目使用的 Web Serial 接口。
 
+Linux 用户还需确认当前账号属于 `dialout` 组，并在修改用户组后注销、重新登录。不要使用套件底部仅供电的 Type-C 口；电脑真实数据连接必须使用 XIAO 的 USB 数据口。
+
 ### 心率或呼吸率是 0
 
 这不一定代表串口故障。如果 `phase`、`targets`、`presence` 或 `distance` 仍在更新，通信通常正常。让单人保持静止，雷达朝向胸腹部，并在实际部署环境中重新验证距离、角度和遮挡影响。
@@ -183,6 +241,12 @@ Seeed-mmWave-library/   固定版本的上游 Git submodule
 video_demo/             宣传视频、预览图和渲染脚本
 tools/                  官方 GUI 放置说明（不提交大型二进制）
 setup-windows.ps1       新电脑 Arduino 环境安装
+environment.yml         Conda biosensor Python 环境
+setup-linux.sh          Linux Arduino 环境安装
+arduino-env.sh          Linux 项目内 Arduino CLI 包装
+restore-robot-probe.sh  Linux 编译并上传真实数据固件
+start-demo.sh           Linux 启动网页
+start-dashboard.sh      Linux 刷入固件并启动网页
 start-demo.cmd          仅启动网页，不刷固件
 start-dashboard.cmd     刷入 probe 并启动网页
 start-radar-gui.cmd     刷入 passthrough 并启动官方 GUI
@@ -196,7 +260,9 @@ restore-robot-probe.cmd 恢复 JSON Lines 固件
 - [ ] `setup-windows.ps1` 成功完成
 - [ ] `arduino-env.cmd board list` 能识别 XIAO ESP32C6
 - [ ] 使用实际 COM 端口运行 `start-dashboard.cmd`
-- [ ] Edge/Chrome 手动授权同一 COM 端口
+- [ ] Linux：`setup-linux.sh` 成功，账号有 `dialout` 权限
+- [ ] Linux：使用实际 `/dev/ttyACM*` 运行 `start-dashboard.sh`
+- [ ] Edge/Chrome 手动授权同一 COM 或 `/dev/tty*` 设备
 - [ ] Dashboard 中 frame counter 持续增加
 - [ ] Demo 数据与真实传感器数据没有混淆
 - [ ] 机器人部署前已在目标环境重新标定和验证
